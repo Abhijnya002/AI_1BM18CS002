@@ -1,89 +1,101 @@
-def print_b(src):
-    state = src.copy()
-    state[state.index(-1)] = ' '
-    print(
-        f"""
-{state[0]} {state[1]} {state[2]}
-{state[3]} {state[4]} {state[5]}
-{state[6]} {state[7]} {state[8]}
-        """
-    )
-    
-def h(state, target):
-    count=0
-    i=0
-    for j in state:
-        if state[i]!= target[i]:
-            count=count+1
-    return count
+class Node:
+    def __init__(self, data, level, fval):
+        self.data = data
+        self.level = level
+        self.fval = fval
 
-
-def astar(state,target):# Add inputs if more are required
-    states = [src]
-    g = 0
-    visited_states =[]
-    while len(states):
-        print(f"Level: {g}")
-        moves = []
-        for state in states:
-            visited_states.append(state)
-            print_b(state)
-            if state == target:
-                print("Successfully solved 8 puzzle")
-                return
-            moves += [move for move in possible_moves(state, visited_states) if move not in moves]
-        costs = [g + h(move, target) for move in moves]
-        states = [moves[i] for i in range(len(moves)) if costs[i] == min(costs)]
-        g += 1
-    print("Fail")
-    
-    
-
-def possible_moves(state,visited_state):# Add inputs if more are required 
-    # Find index of empty spot and assign it to b
-    b = state.index(-1);
-    
-    #'d' for down, 'u' for up, 'r' for right, 'l' for left - directions array
-    d = []
-                                    
-    #Add all possible direction into directions array - Hint using if statements
-    if b - 3 in range(9): 
-        d.append('u')
-    if b not in [0,3,6]: 
-        d.append('l')
-    if b not in [2,5,8]: 
-        d.append('r')
-    if b + 3 in range(9): 
-        d.append('d')
-    
-    # If direction is possible then add state to move
-    pos_moves = []
-    
-    # for all possible directions find the state if that move is played
-    ### Jump to gen function to generate all possible moves in the given directions
-    for m in d:
-        pos_moves.append(gen(state, m, b))
-    
-    # return all possible moves only if the move not in visited_states
-    return [move for move in pos_moves if move not in visited_state]
-
-def gen(state,m, b):
-    temp = state.copy()                              
-    
-    # if move is to slide empty spot to the left and so on
-    if m == 'u': temp[b-3] , temp[b] = temp[b], temp[b-3]
-    if m == 'l': temp[b-1] , temp[b] = temp[b], temp[b-1]
-    if m == 'r': temp[b+1] , temp[b] = temp[b], temp[b+1]
-    if m == 'd': temp[b+3] , temp[b] = temp[b], temp[b+3]   
-    
-    # return new state with tested move to later check if "src == target"
-    return temp
-
-#Test 1
-src = [1,2,3,-1,4,5,6,7,8]
-target = [1,2,3,4,5,-1,6,7,8]  
-
+    def generate_child(self):
        
+        x, y = self.find(self.data, '_')
+        val_list = [[x, y - 1], [x, y + 1], [x - 1, y], [x + 1, y]]
+        children = []
+        for i in val_list:
+            child = self.shuffle(self.data, x, y, i[0], i[1])
+            if child is not None:
+                child_node = Node(child, self.level + 1, 0)
+                children.append(child_node)
+        return children
+
+    def shuffle(self, puz, x1, y1, x2, y2):
+        if x2 >= 0 and x2 < len(self.data) and y2 >= 0 and y2 < len(self.data):
+            temp_puz = []
+            temp_puz = self.copy(puz)
+            temp = temp_puz[x2][y2]
+            temp_puz[x2][y2] = temp_puz[x1][y1]
+            temp_puz[x1][y1] = temp
+            return temp_puz
+        else:
+            return None
+
+    def copy(self, root):
+        temp = []
+        for i in root:
+            t = []
+            for j in i:
+                t.append(j)
+            temp.append(t)
+        return temp
+
+    def find(self, puz, x):
+        for i in range(0, len(self.data)):
+            for j in range(0, len(self.data)):
+                if puz[i][j] == x:
+                    return i, j
 
 
-astar(src, target)
+class Puzzle:
+    def __init__(self, size):
+        self.n = size
+        self.open = []
+        self.closed = []
+
+    def accept(self):
+        puz = []
+        for i in range(0, self.n):
+            temp = input().split(" ")
+            puz.append(temp)
+        return puz
+
+    def f(self, start, goal):
+        return self.h(start.data, goal) + start.level
+
+    def h(self, start, goal):
+        temp = 0
+        for i in range(0, self.n):
+            for j in range(0, self.n):
+                if start[i][j] != goal[i][j] and start[i][j] != '_':
+                    temp += 1
+        return temp
+
+    def process(self):
+        print("Enter the start state matrix \n")
+        start = self.accept()
+        print("Enter the goal state matrix \n")
+        goal = self.accept()
+
+        start = Node(start, 0, 0)
+        start.fval = self.f(start, goal)
+        self.open.append(start)
+        print("\n\n")
+        while True:
+            cur = self.open[0]
+            print("")
+            print("  | ")
+            print(" \\\'/ \n")
+            for i in cur.data:
+                for j in i:
+                    print(j, end=" ")
+                print("")
+            if (self.h(cur.data, goal) == 0):
+                break
+            for i in cur.generate_child():
+                i.fval = self.f(i, goal)
+                self.open.append(i)
+            self.closed.append(cur)
+            del self.open[0]
+
+            self.open.sort(key=lambda x: x.fval, reverse=False)
+
+
+puz = Puzzle(3)
+puz.process()
