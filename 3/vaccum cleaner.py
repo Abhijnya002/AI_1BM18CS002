@@ -31,9 +31,16 @@ def print_floor(floor, row, col):
         print(c)
     print("\n")
 
-# Test 1
-floor = [[1, 0, 0, 0],
-         [0, 1, 0, 1],
-         [1, 0, 1, 1]]
+column_size = int(input("Enter size of column: "))
+row_size = int(input("Enter size of row: "))
+floor = []
+for i in range(0, row_size):
+    b = []
+    for j in range(0, column_size):
+        print("Input {0} {1} element of 2d array".format(i, j))
+        temp = int(input())
+        b.append(temp)
+    floor.append(b)
+
 
 clean(floor)
