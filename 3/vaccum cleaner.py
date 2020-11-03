@@ -11,6 +11,10 @@ def clean(floor):
                     floor[i][j]=0
                     c=c+1                 #increment the count
                     print_floor(floor,i,j,c)
+                else:
+                    print('vaccum cleaner Position :',i,j)
+                    print("No Action")
+                    print("\n")
                 j=j+1
                        
         # If current row is even,traverse from right to left        
@@ -21,6 +25,11 @@ def clean(floor):
                     floor[i][j]=0
                     c=c+1                 #increment the count
                     print_floor(floor,i,j,c)
+                 else:
+                     print('vaccum cleaner Position :',i,j)
+                     print("No Action")
+                     print("\n")
+                     
                  j=j-1
         i=i+1
         
@@ -35,9 +44,19 @@ def print_floor(floor, row, col,count):
     
     print("\n")
     
-   # Test 2
-floor = [[1, 1, 0, 0, 1, 0, 0],
-         [0, 0, 0, 1, 0, 0, 0],
-         [0, 1, 1, 1, 1, 1, 1],
-         [0, 1, 0, 1, 0, 1, 0]]
-clean(floor)
+    
+col = int(input("Enter size of column: "))
+row = int(input("Enter size of row: "))
+a = []
+for i in range(0, row):
+    b = []
+    for j in range(0, col):
+        print("Input {0} {1} element of 2d array".format(i, j))
+        temp = int(input())
+        b.append(temp)
+    a.append(b)
+
+    
+
+
+clean(a)
