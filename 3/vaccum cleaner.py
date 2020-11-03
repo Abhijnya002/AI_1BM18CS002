@@ -1,62 +1,39 @@
-def clean(floor):  
-    c=0
-    i=0
-    j=0
-    row=len(floor)
-    column=len(floor[0])
-    while i < row:
-        if (i % 2 == 0):          # If current row is even, traverse from  left to right 
-            while j < column: 
-                if floor[i][j] == 1:
-                    floor[i][j]=0
-                    c=c+1                 #increment the count
-                    print_floor(floor,i,j,c)
+
+def clean(floor):
+    row = len(floor)
+    col = len(floor[0])
+    for i in range(0, row):
+        if(i%2 == 0):
+            for j in range(0, col):
+                if(floor[i][j] == 1):
+                    floor[i][j] = 0
+                    print_floor(floor, i, j)
+                else:
+                   print('vaccum cleaner Position :',i,j)
+                   print("No Action")
+                   print("\n")
+                    
+        else:
+            for j in range(col-1, -1, -1):
+                if(floor[i][j] == 1):
+                    floor[i][j] = 0
+                    print_floor(floor, i, j)
                 else:
                     print('vaccum cleaner Position :',i,j)
                     print("No Action")
                     print("\n")
-                j=j+1
-                       
-        # If current row is even,traverse from right to left        
-        else:
-            j = column -1
-            while j > 0:
-                 if floor[i][j] == 1:     #If floor is dirt(1) clean(0) it
-                    floor[i][j]=0
-                    c=c+1                 #increment the count
-                    print_floor(floor,i,j,c)
-                 else:
-                     print('vaccum cleaner Position :',i,j)
-                     print("No Action")
-                     print("\n")
-                     
-                 j=j-1
-        i=i+1
-        
 
-def print_floor(floor, row, col,count):
-    print('step:',count)
+def print_floor(floor, row, col):
     print("Action:SUCK")
     print('vaccum cleaner Position :',row,col)
     print("After cleaning the matrix looks like:")
     for c in floor:
         print(c)
-    
     print("\n")
-    
-    
-col = int(input("Enter size of column: "))
-row = int(input("Enter size of row: "))
-a = []
-for i in range(0, row):
-    b = []
-    for j in range(0, col):
-        print("Input {0} {1} element of 2d array".format(i, j))
-        temp = int(input())
-        b.append(temp)
-    a.append(b)
 
-    
+# Test 1
+floor = [[1, 0, 0, 0],
+         [0, 1, 0, 1],
+         [1, 0, 1, 1]]
 
-
-clean(a)
+clean(floor)
