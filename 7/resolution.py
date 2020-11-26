@@ -1,4 +1,4 @@
-#global variav=ble
+#global variable
 kb = []
 
 def Set():
